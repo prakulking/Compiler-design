@@ -1,0 +1,24 @@
+%{
+#include <stdio.h>
+int whitespace_count = 0;
+int newline_count = 0;
+%}
+
+%%
+
+[ \t]+         { whitespace_count += yyleng; }
+\n             { newline_count++; }
+.|\n           { /* Ignore other characters */ }
+
+%%
+
+int main(void) {
+    yylex();
+    printf("Whitespaces: %d\n", whitespace_count);
+    printf("Newlines: %d\n", newline_count);
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}

@@ -1,0 +1,55 @@
+%{
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h> // Include this header for strdup
+
+void add_to_list(const char* str, char*** list, int* size) {
+    *list = (char**) realloc(*list, (*size + 1) * sizeof(char*));
+    (*list)[*size] = strdup(str);
+    (*size)++;
+}
+
+void print_list(const char* title, char** list, int size) {
+    printf("%s:\n", title);
+    for (int i = 0; i < size; i++) {
+        printf("%s\n", list[i]);
+        free(list[i]);
+    }
+    free(list);
+}
+
+char** numbers = NULL;
+int num_count = 0;
+
+char** words = NULL;
+int word_count = 0;
+%}
+
+%%
+
+[0-9]+(\.[0-9]+)? {
+    add_to_list(yytext, &numbers, &num_count);
+}
+
+[A-Za-z]+ {
+    add_to_list(yytext, &words, &word_count);
+}
+
+[ \t\n]+ ; // Ignore whitespace
+
+. ; // Ignore any other character
+
+%%
+
+int main() {
+    yylex();
+    
+    print_list("Numbers", numbers, num_count);
+    print_list("Words", words, word_count);
+    
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}

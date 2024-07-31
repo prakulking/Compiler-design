@@ -1,0 +1,33 @@
+%{
+#include <stdio.h>
+#include <string.h>
+
+int count = 0;
+char *word_to_find;
+
+%}
+
+%option noyywrap
+
+%%
+
+{word_to_find} {
+    count++;
+}
+
+.|\n {}
+
+%%
+
+int main(int argc, char **argv) {
+    if (argc != 3) {
+        fprintf(stderr, "Usage: %s <word> <sentence>\n", argv[0]);
+        return 1;
+    }
+
+    word_to_find = argv[1];
+    yy_scan_string(argv[2]);
+    yylex();
+    printf("Frequency of '%s': %d\n", word_to_find, count);
+    return 0;
+}

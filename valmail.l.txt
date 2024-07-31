@@ -1,0 +1,22 @@
+%{
+#include <stdio.h>
+%}
+
+%%
+
+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4} { 
+    printf("Valid Email: %s\n", yytext); 
+}
+
+.|\n { /* Ignore other characters */ }
+
+%%
+
+int main(void) {
+    yylex();
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}

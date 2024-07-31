@@ -1,0 +1,24 @@
+%{
+#define REPLACE_WORD "newword"
+%}
+
+%%
+
+oldword { 
+    printf(REPLACE_WORD); 
+}
+
+.|\n { 
+    printf("%s", yytext); 
+}
+
+%%
+
+int main(void) {
+    yylex();
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}
